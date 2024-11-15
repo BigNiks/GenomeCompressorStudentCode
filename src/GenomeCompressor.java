@@ -5,7 +5,6 @@
  *  Dependencies: BinaryIn.java BinaryOut.java
  *  Data files:   genomeTest.txt
  *                virus.txt
- *
  *  Compress or expand a genomic sequence using a 2-bit code.
  ******************************************************************************/
 
@@ -25,11 +24,15 @@ public class GenomeCompressor {
      */
     public static void compress() {
         String encrypted = BinaryStdIn.readString();
-        int i = 0;
-        while (i < encrypted.length()) {
-                String temp = encrypted.substring(i, i + 8);
-                BinaryStdOut.write(Integer.parseInt(temp,2));
-                i += 8;
+        int n = encrypted.length();
+        int[] map = new int['T' + 1];
+        map['A'] = 0b00;
+        map['C'] = 0b01;
+        map['G'] = 0b10;
+        map['T'] = 0b11;
+        BinaryStdOut.write(n);
+        for(int i = 0; i < n; i++) {
+                BinaryStdOut.write(map[encrypted.charAt(i)], 2);
             }
         BinaryStdOut.close();
     }
@@ -38,9 +41,18 @@ public class GenomeCompressor {
      * Reads a binary sequence from standard input; expands and writes the results to standard output.
      */
     public static void expand() {
-        while (!BinaryStdIn.isEmpty()) {
-            char c = BinaryStdIn.readChar();
-            BinaryStdOut.write(c);
+        int numCodes = BinaryStdIn.readInt();
+        int letter = 0;
+        int i = 0;
+        char[] map = new char[4];
+        map[0b00] = 'A';
+        map[0b01] = 'C';
+        map[0b10] = 'G';
+        map[0b11] = 'T';
+        while (i < numCodes) {
+            letter = BinaryStdIn.readInt(2);
+            BinaryStdOut.write(map[letter]);
+            i++;
         }
         BinaryStdOut.close();
     }
